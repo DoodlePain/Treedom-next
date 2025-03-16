@@ -1,40 +1,58 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# Treedom Multi-Step Form
 
-## Getting Started
+Questo è un progetto [Next.js](https://nextjs.org) avviato con [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
 
-First, run the development server:
+## Introduzione
+
+Questo progetto è un esempio di modulo multi-step utilizzando Next.js e React. In modalità desktop, il modulo è strutturato verticalmente su una sola pagina. In modalità mobile, il modulo è diviso in step utilizzando Embla Carousel.
+
+## Avvio del Progetto
+
+Per avviare il server di sviluppo:
 
 ```bash
 npm run dev
-# or
+# oppure
 yarn dev
-# or
+# oppure
 pnpm dev
-# or
+# oppure
 bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Apri [http://localhost:3000](http://localhost:3000) nel tuo browser per vedere il risultato.
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+Puoi iniziare a modificare la pagina modificando `pages/index.tsx`. La pagina si aggiorna automaticamente mentre modifichi il file.
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+Le [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) possono essere accessibili su [http://localhost:3000/api/hello](http://localhost:3000/api/hello). Questo endpoint può essere modificato in `pages/api/hello.ts`.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+La directory `pages/api` è mappata su `/api/*`. I file in questa directory sono trattati come [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) invece che come pagine React.
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Questo progetto utilizza [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) per ottimizzare e caricare automaticamente [Geist](https://vercel.com/font), una nuova famiglia di font per Vercel.
 
-## Learn More
+## Struttura del Progetto
 
-To learn more about Next.js, take a look at the following resources:
+- `pages/`: Contiene le pagine del progetto.
+  - `index.tsx`: La pagina principale che include il modulo multi-step.
+  - `api/`: Contiene le API routes.
+  - `components/`: Contiene i componenti utilizzati nel progetto.
+    - `FormContainer.tsx`: Il contenitore del modulo multi-step.
+    - `FormField.tsx`: Un componente per i campi del modulo.
+    - `MultiStepForm.tsx`: Il componente principale del modulo multi-step.
+    - `DotButtons.tsx`: I pulsanti per navigare tra gli step del modulo in modalità mobile.
+    - `ErrorMessage.tsx`: Un componente per visualizzare i messaggi di errore.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+## Ulteriori Informazioni
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Per saperne di più su Next.js, dai un'occhiata alle seguenti risorse:
 
-## Deploy on Vercel
+- [Documentazione di Next.js](https://nextjs.org/docs) - scopri le funzionalità e le API di Next.js.
+- [Impara Next.js](https://nextjs.org/learn-pages-router) - un tutorial interattivo su Next.js.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Puoi controllare il [repository GitHub di Next.js](https://github.com/vercel/next.js) - i tuoi feedback e contributi sono benvenuti!
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+## Deploy su Vercel
+
+Il modo più semplice per effettuare il deploy della tua app Next.js è utilizzare la [piattaforma Vercel](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) dai creatori di Next.js.
+
+Consulta la nostra [documentazione sul deploy di Next.js](https://nextjs.org/docs/pages/building-your-application/deploying) per maggiori dettagli.

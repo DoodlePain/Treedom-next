@@ -40,7 +40,6 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
     loop: false,
     containScroll: "keepSnaps",
     direction: "ltr",
-    
   });
 
   const { selectedIndex, scrollSnaps, onDotButtonClick } =
@@ -202,7 +201,9 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
-          disabled={!isFieldValid[Object.keys(formData)[step]]}
+          disabled={
+            !isFieldValid[Object.keys(formData)[step] as keyof FormData]
+          }
         >
           {step < 2 ? "Next" : "Submit"}
         </button>
