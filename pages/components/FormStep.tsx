@@ -9,25 +9,37 @@ interface FormStepProps {
   handleSubmit: (e: React.FormEvent<HTMLFormElement>) => void;
 }
 
-const FormStep: React.FC<FormStepProps> = ({ step, formData, errors, handleChange, handleSubmit }) => {
-  const fields = [
-    { label: "Username", name: "username", type: "text" },
-    { label: "Email", name: "email", type: "email" },
-    { label: "Password", name: "password", type: "password" },
-  ];
+const fields = [
+  { label: "Username", name: "username", type: "text" },
+  { label: "Email", name: "email", type: "email" },
+  { label: "Password", name: "password", type: "password" },
+];
 
-  return (
+const FormStep: React.FC<FormStepProps> = ({
+  step,
+  formData,
+  errors,
+  handleChange,
+  handleSubmit,
+}) => {
+  const field = fields[step];
+
+  return field?.label ? (
     <form onSubmit={handleSubmit}>
       <FormField
-        label={fields[step].label}
-        name={fields[step].name}
-        type={fields[step].type}
-        value={formData[fields[step].name]}
+        label={field.label}
+        name={field.name}
+        type={field.type}
+        value={formData[field.name]}
         onChange={handleChange}
-        error={errors[fields[step].name]}
+        error={errors[field.name]}
       />
-      <button type="submit">{step < fields.length - 1 ? "Next" : "Submit"}</button>
+      <button type="submit">
+        {step < fields.length - 1 ? "Next" : "Submit"}
+      </button>
     </form>
+  ) : (
+    <></>
   );
 };
 

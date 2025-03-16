@@ -11,7 +11,15 @@ interface FormFieldProps {
   disabled?: boolean;
 }
 
-const FormField: React.FC<FormFieldProps> = ({ label, name, type = "text", value, onChange, error, disabled }) => (
+const FormField: React.FC<FormFieldProps> = ({
+  label,
+  name,
+  type = "text",
+  value,
+  onChange,
+  error,
+  disabled,
+}) => (
   <div className="flex flex-col md:w-full">
     <label htmlFor={name}>{label}</label>
     <input
@@ -21,6 +29,8 @@ const FormField: React.FC<FormFieldProps> = ({ label, name, type = "text", value
       onChange={onChange}
       className="form-input"
       disabled={disabled}
+      id={name}
+      autoComplete="off"
     />
     {error && <ErrorMessage message={error} />}
   </div>

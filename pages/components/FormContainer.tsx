@@ -186,7 +186,7 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
         </div>
         <div className="embla__controls">
           <div className="embla__dots flex flex-row gap-2 items-center justify-center my-4">
-            {scrollSnaps.map((_, index) => (
+            {scrollSnaps.map((_: number, index: number) => (
               <DotButton
                 key={index}
                 onClick={() => onDotClickHandler(index)}
