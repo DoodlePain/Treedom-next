@@ -1,20 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { z } from "zod";
-import debounce from "lodash.debounce";
-import useEmblaCarousel from "embla-carousel-react";
-import FormField from "./FormField";
-import { DotButton, useDotButton } from "./DotButtons";
-
-const schema = z.object({
-  username: z.string().nonempty("Username is required"),
-  email: z
-    .string()
-    .email("Invalid email address")
-    .nonempty("Email is required"),
-  password: z.string().nonempty("Password is required"),
-});
-
-type FormData = z.infer<typeof schema>;
+import React, { useState } from "react";
+import FormStep from "./FormStep";
+import EmblaCarousel from "./EmblaCarousel";
+import { validateField } from "../utils/debounce";
+import { FormData, validateStep } from "../utils/validation";
 
 interface FormContainerProps {
   isMobile?: boolean;
@@ -36,76 +24,10 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
     password: false,
   });
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({
-    loop: false,
-    containScroll: "keepSnaps",
-    direction: "ltr",
-  });
-
-  const { selectedIndex, scrollSnaps, onDotButtonClick } =
-    useDotButton(emblaApi);
-
-  useEffect(() => {
-    if (emblaApi) {
-      emblaApi.scrollTo(step);
-    }
-  }, [step, emblaApi]);
-
-  const validateField = useCallback(
-    debounce(async (name: keyof FormData, value: string) => {
-      const response = await fetch("/api/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ input: value, field: name }),
-      });
-
-      const result = await response.json();
-
-      if (!result.success) {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: result.message,
-        }));
-        setIsFieldValid((prevValid) => ({
-          ...prevValid,
-          [name]: false,
-        }));
-      } else {
-        setErrors((prevErrors) => ({
-          ...prevErrors,
-          [name]: undefined,
-        }));
-        setIsFieldValid((prevValid) => ({
-          ...prevValid,
-          [name]: true,
-        }));
-      }
-    }, 300),
-    []
-  );
-
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({ ...prevData, [name]: value }));
-    validateField(name as keyof FormData, value);
-  };
-
-  const validateStep = (data: Partial<FormData>) => {
-    const result = schema.partial().safeParse(data);
-    if (!result.success) {
-      const newErrors: Partial<FormData> = {};
-      result.error.errors.forEach((error) => {
-        if (error.path[0]) {
-          newErrors[error.path[0] as keyof FormData] = error.message;
-        }
-      });
-      setErrors(newErrors);
-      return false;
-    }
-    setErrors({});
-    return true;
+    validateField(name as keyof FormData, value, setErrors, setIsFieldValid);
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -114,7 +36,8 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
       [`${Object.keys(formData)[step]}` as keyof FormData]:
         formData[`${Object.keys(formData)[step]}` as keyof FormData],
     };
-    if (validateStep(currentStepData)) {
+    const validation = validateStep(currentStepData);
+    if (validation.success) {
       const response = await fetch("/api/validate", {
         method: "POST",
         headers: {
@@ -130,18 +53,12 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
 
       if (result.success) {
         setStep((prevStep: number) => prevStep + 1);
-        if (emblaApi) {
-          emblaApi.scrollTo(step + 1);
-        }
       } else {
         console.error(result.message);
       }
+    } else {
+      setErrors(validation.errors);
     }
-  };
-
-  const onDotClickHandler = (index: number) => {
-    onDotButtonClick(index);
-    setStep(index);
   };
 
   if (isMobile) {
@@ -150,54 +67,32 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
         className="h-full flex flex-col justify-evenly"
         onSubmit={handleSubmit}
       >
-        <div className="embla" ref={emblaRef}>
-          <div className="embla__container flex flex-row gap-4">
-            <div className="embla__slide min-w-0 flex-[0_0_100%]">
-              <FormField
-                label="Username"
-                name="username"
-                value={formData.username}
-                onChange={handleChange}
-                error={errors.username}
-              />
-            </div>
-            <div className="embla__slide min-w-0 flex-[0_0_100%]">
-              <FormField
-                label="Email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                error={errors.email}
-                disabled={!isFieldValid.username}
-              />
-            </div>
-            <div className="embla__slide min-w-0 flex-[0_0_100%]">
-              <FormField
-                label="Password"
-                name="password"
-                type="password"
-                value={formData.password}
-                onChange={handleChange}
-                error={errors.password}
-                disabled={!isFieldValid.email}
-              />
-            </div>
-          </div>
-        </div>
-        <div className="embla__controls">
-          <div className="embla__dots flex flex-row gap-2 items-center justify-center my-4">
-            {scrollSnaps.map((_: number, index: number) => (
-              <DotButton
-                key={index}
-                onClick={() => onDotClickHandler(index)}
-                className={"embla__dot".concat(
-                  index === selectedIndex ? " embla__dot--selected" : ""
-                )}
-              />
-            ))}
-          </div>
-        </div>
-
+        <EmblaCarousel step={step} setStep={setStep}>
+          <FormStep
+            label="Username"
+            name="username"
+            value={formData.username}
+            onChange={handleChange}
+            error={errors.username}
+          />
+          <FormStep
+            label="Email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            error={errors.email}
+            disabled={!isFieldValid.username}
+          />
+          <FormStep
+            label="Password"
+            name="password"
+            type="password"
+            value={formData.password}
+            onChange={handleChange}
+            error={errors.password}
+            disabled={!isFieldValid.email}
+          />
+        </EmblaCarousel>
         <button
           type="submit"
           className="bg-blue-500 text-white py-2 px-4 rounded hover:bg-blue-600 transition-colors duration-300"
@@ -216,14 +111,14 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
       className="flex flex-col justify-stretch items-stretch w-full gap-4"
       onSubmit={handleSubmit}
     >
-      <FormField
+      <FormStep
         label="Username"
         name="username"
         value={formData.username}
         onChange={handleChange}
         error={errors.username}
       />
-      <FormField
+      <FormStep
         label="Email"
         name="email"
         value={formData.email}
@@ -231,7 +126,7 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
         error={errors.email}
         disabled={!isFieldValid.username}
       />
-      <FormField
+      <FormStep
         label="Password"
         name="password"
         type="password"
