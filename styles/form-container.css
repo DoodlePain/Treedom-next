@@ -1,0 +1,56 @@
+.multi-step-form .desktop-form {
+  display: none;
+}
+
+.multi-step-form .mobile-form {
+  display: block;
+}
+
+.accordion-item {
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin-bottom: 10px;
+  padding: 10px;
+}
+
+.accordion-item header {
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.accordion-item header:hover {
+  background-color: #f0f0f0;
+}
+
+.accordion-item .accordion-panel {
+  padding: 10px;
+}
+
+.spinner {
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-top: 2px solid white;
+  border-radius: 50%;
+  width: 12px;
+  height: 12px;
+  animation: spin 0.6s linear infinite;
+  display: inline-block;
+  margin-right: 8px;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+@media (min-width: 768px) {
+  .multi-step-form .desktop-form {
+    display: block;
+  }
+  .multi-step-form .mobile-form {
+    display: none;
+  }
+}

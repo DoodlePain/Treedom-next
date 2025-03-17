@@ -39,6 +39,7 @@ export const validateField = debounce(
         [name]: true,
       }));
     }
+    return result;
   },
   300
 );
