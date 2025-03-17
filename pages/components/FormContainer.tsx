@@ -31,33 +31,35 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const currentStepData = {
-      [`${Object.keys(formData)[step]}` as keyof FormData]:
-        formData[`${Object.keys(formData)[step]}` as keyof FormData],
-    };
-    const validation = validateStep(currentStepData);
-    if (validation.success) {
-      const response = await fetch("/api/validate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          input: formData[`${Object.keys(formData)[step]}` as keyof FormData],
-          field: `${Object.keys(formData)[step]}`,
-        }),
-      });
+    try {
+      e.preventDefault();
+      const currentStepData = {
+        [`${Object.keys(formData)[step]}` as keyof FormData]:
+          formData[`${Object.keys(formData)[step]}` as keyof FormData],
+      };
+      const isValid = validateStep(currentStepData);
+      if (isValid) {
+        const response = await fetch("/api/validate", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            input: formData[`${Object.keys(formData)[step]}` as keyof FormData],
+            field: `${Object.keys(formData)[step]}`,
+          }),
+        });
 
-      const result = await response.json();
+        const result = await response.json();
 
-      if (result.success) {
-        setStep((prevStep: number) => prevStep + 1);
-      } else {
-        console.error(result.message);
+        if (result.success) {
+          setStep((prevStep: number) => prevStep + 1);
+        } else {
+          console.error(result.message);
+        }
       }
-    } else {
-      setErrors(validation.errors);
+    } catch (error) {
+      console.error(error);
     }
   };
 

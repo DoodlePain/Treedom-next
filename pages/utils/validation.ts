@@ -20,7 +20,9 @@ export const validateStep = (data: Partial<FormData>) => {
         newErrors[error.path[0] as keyof FormData] = error.message;
       }
     });
-    return { success: false, errors: newErrors };
+    throw new Error("Invalid data");
   }
-  return { success: true, errors: {} };
+  return true;
 };
+
+export default validateStep;

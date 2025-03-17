@@ -42,3 +42,5 @@ export const validateField = debounce(
   },
   300
 );
+
+export default validateField;
