@@ -53,7 +53,23 @@ const FormContainer: React.FC<FormContainerProps> = ({ isMobile }) => {
         const result = await response.json();
 
         if (result.success) {
-          setStep((prevStep: number) => prevStep + 1);
+          if (step < 2) {
+            setStep((prevStep: number) => prevStep + 1);
+          } else {
+            alert("Form submitted successfully!");
+            setFormData({
+              username: "",
+              email: "",
+              password: "",
+            });
+            setErrors({});
+            setStep(0);
+            setIsFieldValid({
+              username: false,
+              email: false,
+              password: false,
+            });
+          }
         } else {
           console.error(result.message);
         }

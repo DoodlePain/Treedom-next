@@ -1,38 +1,28 @@
 import React from "react";
+import FormField from "./FormField";
 
 interface FormStepProps {
   label: string;
   name: string;
+  type?: string;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   error?: string;
-  type?: string;
   disabled?: boolean;
 }
 
-const FormStep: React.FC<FormStepProps> = ({
-  label,
-  name,
-  value,
-  onChange,
-  error,
-  type = "text",
-  disabled = false,
-}) => {
-  return (
-    <div className="form-step">
-      <label htmlFor={name}>{label}</label>
-      <input
-        id={name}
-        name={name}
-        type={type}
-        value={value}
-        onChange={onChange}
-        disabled={disabled}
-      />
-      {error && <span className="error">{error}</span>}
-    </div>
-  );
-};
+const FormStep: React.FC<FormStepProps> = ({ label, name, type = "text", value, onChange, error, disabled }) => (
+  <div className="embla__slide min-w-0 flex-[0_0_100%]">
+    <FormField
+      label={label}
+      name={name}
+      type={type}
+      value={value}
+      onChange={onChange}
+      error={error}
+      disabled={disabled}
+    />
+  </div>
+);
 
 export default FormStep;
